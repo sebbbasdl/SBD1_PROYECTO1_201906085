@@ -697,3 +697,26 @@ ORDER BY
     mes ASC,
     total_tratamientos DESC;
 
+
+--NOVENA CONSULTA
+
+SELECT h.nombre_hospital, 
+       TO_CHAR(COUNT(v.id_victima) / SUM(COUNT(v.id_victima)) OVER() * 100, 'FM999.00') AS porcentaje_victimas
+FROM hospital h
+LEFT JOIN victima v ON h.id_hospital = v.id_hospital
+GROUP BY h.nombre_hospital
+ORDER BY porcentaje_victimas DESC;
+
+--DECIMA CONSULTA
+SELECT h.nombre_hospital, t.contacto_fisico, 
+  COUNT(*) / SUM(COUNT(*)) OVER(PARTITION BY h.id_hospital) * 100 AS porcentaje_victimas
+FROM hospital h
+LEFT JOIN victima v ON h.id_hospital = v.id_hospital
+LEFT JOIN victima_asociado va ON v.id_victima = va.id_victima
+LEFT JOIN asociado a ON va.id_asociado = a.id_asociado
+LEFT JOIN tipo_contacto t ON va.id_victima_asociado = t.id_victima_asociado AND t.contacto_fisico IS NOT NULL
+GROUP BY h.nombre_hospital, t.contacto_fisico
+ORDER BY h.nombre_hospital, porcentaje_victimas DESC;
+
+
+
