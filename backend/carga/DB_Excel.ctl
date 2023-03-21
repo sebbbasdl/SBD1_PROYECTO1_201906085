@@ -1,6 +1,6 @@
 OPTIONS (SKIP=1)
 LOAD DATA
-INFILE 'C:\Users\sebas\OneDrive\Documentos\Primer Semestre 2023\Bases 1\Lab\Proyectos\DB_Excel.csv'
+INFILE 'C:\Users\sebas\OneDrive\Documentos\SBD1_PROYECTO1_201906085\backend\DB_Excel.csv'
 INTO TABLE TABLA_TEMPORAL
 FIELDS TERMINATED BY ';'
 TRAILING NULLCOLS
