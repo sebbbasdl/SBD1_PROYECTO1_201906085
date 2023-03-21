@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual de usuario Proyecto OLC1 (1).html.html</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><p>Manual de usuario Proyecto SDB1</p>
+<p>Universidad San Carlos de Guatemala<br>
+Facultad de Ingeniería<br>
+Escuela de Ciencias y Sistemas<br>
+SISTEMAS DE BASES DE DATOS 1</p>
+<p><em>SEBASTIAN ALEJANDRO DE LEON TENAZ 201906085</em></p>
+<h1 id="manual-de-tecnico---proyecto-1"><strong>MANUAL DE TECNICO - PROYECTO 1</strong></h1>
+<p>**</p>
+<h2 id="objetivos">OBJETIVOS</h2>
+<p>OBJETIVO GENERAL:</p>
+<ul>
+<li>Utilizar consultas para presentar la información requerida de una base de datos relacional…</li>
+</ul>
+<p>OBJETIVOS ESPECIFICOS:</p>
+<ul>
+<li>Aprender a realizar cargas masivas desde archivos brindados.</li>
+<li>Aprender a utilizar modelar y crear una base de datos.</li>
+<li>Creación de consultas óptimas y funcionales para extraer reportería de una base de datos.</li>
+<li>Desarrollar una API para consumo y muestra de los resultados.</li>
+</ul>
+<h2 id="diseño">DISEÑO</h2>
+<p>Se realizaron los diferentes modelos para el modelado de la base de datos, se presetaran a continuacion:</p>
+<h3 id="modelo-conceptual">Modelo Conceptual</h3>
+<p><img src="https://github.com/sebbbasdl/SBD1_PROYECTO1_201906085/blob/master/modelo%20conceptual.PNG?raw=true" alt=""></p>
+<h3 id="modelo-logico">Modelo logico</h3>
+<p><img src="https://github.com/sebbbasdl/SBD1_PROYECTO1_201906085/blob/master/modelo%20logico.PNG?raw=true" alt=""></p>
+<h3 id="modelo-relacional">Modelo Relacional</h3>
+<p><img src="https://github.com/sebbbasdl/SBD1_PROYECTO1_201906085/blob/master/modelo%20relacional.PNG?raw=true" alt=""></p>
+<h2 id="funcionalidad">Funcionalidad</h2>
+<ol>
+<li>Crear una tabla temporal en donde debe cargar toda la información del archivo fuente.</li>
+<li>Haciendo uso de consultas a la tabla temporal debe de llenar el modelo que usted propone para almacenar la información de forma correcta de modo que no exista redundancia de los datos.</li>
+<li>Una vez lleno todo el modelo, debe realizar los reportes de la sección REPORTERÍA los cuales serán evaluados para verificar que la información mostrada sea consistente y verídica.</li>
+</ol>
+<h2 id="creacion-de-tablas">Creacion de tablas</h2>
+<p>La creacion de tablas se realizo mediante la ayuda de nuestros modelos aqui estan algunos ejemplos de como se realizaron (Hospital-&gt;Victima):<br>
+<img src="https://github.com/sebbbasdl/SBD1_PROYECTO1_201906085/blob/master/tablas.PNG?raw=true" alt=""></p>
+<h2 id="insercion-de-datos-a-tabla-temporal">Insercion de datos a Tabla temporal:</h2>
+<p>Se usa una tabla temporal para poder migrar los datos de nuestro archivo.csv.<br>
+Para ello utilizamo SQL*LOADER CON EL SIGUIENTE COMANDO:</p>
+<p>-Comando:</p>
+<h4 id="sqlldr-controldb_excel.ctl-datadb_excel.csv-logdb_excel.log-badmaloo.bad">sqlldr control=‘DB_Excel.ctl’ data=‘DB_Excel.csv’ log=‘DB_Excel.log’ bad=‘maloo.bad’</h4>
+<p>Nuestro archivo DB_Excel.ctl:<br>
+<img src="https://github.com/sebbbasdl/SBD1_PROYECTO1_201906085/blob/master/ctl.PNG?raw=true" alt=""></p>
+<h2 id="migrar-datos-de-tabla-temporal-a-las-diferentes-tablas">Migrar datos de tabla temporal a las diferentes tablas:</h2>
+<p><img src="https://github.com/sebbbasdl/SBD1_PROYECTO1_201906085/blob/master/migrarhospital.PNG?raw=true" alt=""></p>
+<p><img src="https://github.com/sebbbasdl/SBD1_PROYECTO1_201906085/blob/master/migrarvictima.PNG?raw=true" alt=""><br>
+Para ello se utilizaron procedimiento aqui algunos ejemplos (hospital-victima):</p>
+<h2 id="consultas-desde-api-">Consultas desde api :</h2>
+<p>Se utilizo nodejs, sequelize y oracledb para poder realizar la api y sus consultas.<br>
+<img src="https://github.com/sebbbasdl/SBD1_PROYECTO1_201906085/blob/master/consultas.PNG?raw=true" alt=""></p>
+</div>
+</body>
+
+</html>
