@@ -25,12 +25,17 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}))
 
 app.post('/consulta1', async (req, res) => {
-  const consulta = `SELECT h.nombre_hospital, h.direccion_hospital, COUNT(v.id_victima) AS fallecidos,
+  const consulta = `SELECT 
+  ROW_NUMBER() OVER (ORDER BY h.nombre_hospital, h.direccion_hospital) AS numero_fila,
+  h.nombre_hospital, 
+  h.direccion_hospital, 
+  COUNT(v.id_victima) AS fallecidos,
   (SELECT COUNT(DISTINCT h2.id_hospital) FROM hospital h2 INNER JOIN victima v2 ON h2.id_hospital = v2.id_hospital WHERE v2.fecha_muerte IS NOT NULL) AS total_hospitales_fallecidos
-  FROM hospital h
-  LEFT JOIN victima v ON h.id_hospital = v.id_hospital
-  WHERE v.fecha_muerte IS NOT NULL
-  GROUP BY h.nombre_hospital, h.direccion_hospital;`;
+FROM hospital h
+LEFT JOIN victima v ON h.id_hospital = v.id_hospital
+WHERE v.fecha_muerte IS NOT NULL
+GROUP BY h.nombre_hospital, h.direccion_hospital;
+`;
   try {
     const result = await sequelize.query(consulta);
     console.log(result);
@@ -42,11 +47,14 @@ app.post('/consulta1', async (req, res) => {
 });
 
 app.post('/consulta2', async (req, res) => {
-  const consulta = `SELECT v.nombre_victima, v.apellido_victima, t.tratamiento
-  FROM VICTIMA v
-  JOIN TRATAMIENTO t ON v.id_victima = t.id_victima
-  WHERE t.tratamiento = 'Transfusiones de sangre'
-  AND t.efectividad_en_victima > 5;`;
+  const consulta = `SELECT v.nombre_victima, v.apellido_victima, t.tratamiento, 
+  COUNT(*) OVER() AS total_filas
+FROM VICTIMA v
+JOIN TRATAMIENTO t ON v.id_victima = t.id_victima
+WHERE t.tratamiento = 'Transfusiones de sangre'
+AND t.efectividad_en_victima > 5;
+
+  `;
   try {
     const result = await sequelize.query(consulta);
     console.log(result);
@@ -58,13 +66,19 @@ app.post('/consulta2', async (req, res) => {
 });
 
 app.post('/consulta3', async (req, res) => {
-  const consulta = `SELECT v.nombre_victima, v.apellido_victima, v.direccion_victima, COUNT(va.id_asociado) AS num_asociados
-  FROM victima v
-  JOIN victima_asociado va ON v.id_victima = va.id_victima
-  JOIN asociado a ON va.id_asociado = a.id_asociado
-  WHERE v.fecha_muerte IS NOT NULL
-  GROUP BY v.nombre_victima, v.apellido_victima, v.direccion_victima
-  HAVING COUNT(va.id_asociado) > 3;`;
+  const consulta = `SELECT ROW_NUMBER() OVER (ORDER BY v.nombre_victima) AS numero_fila,
+  v.nombre_victima,
+  v.apellido_victima,
+  v.direccion_victima,
+  COUNT(va.id_asociado) AS num_asociados
+FROM victima v
+JOIN victima_asociado va ON v.id_victima = va.id_victima
+JOIN asociado a ON va.id_asociado = a.id_asociado
+WHERE v.fecha_muerte IS NOT NULL
+GROUP BY v.nombre_victima, v.apellido_victima, v.direccion_victima
+HAVING COUNT(va.id_asociado) > 3
+ORDER BY v.nombre_victima;
+`;
   try {
     const result = await sequelize.query(consulta);
     console.log(result);
@@ -131,14 +145,28 @@ app.post('/consulta6', async (req, res) => {
 
 
 app.post('/consulta7', async (req, res) => {
-  const consulta = `SELECT v.nombre_victima, v.apellido_victima, v.direccion_victima 
-  FROM Victima v
+  const consulta = `SELECT 
+  ROW_NUMBER() OVER (ORDER BY v.nombre_victima, v.apellido_victima) AS numero_fila,
+  v.nombre_victima, 
+  v.apellido_victima, 
+  v.direccion_victima 
+FROM 
+  Victima v
   JOIN Victima_Asociado va ON v.id_victima = va.id_victima
   JOIN Asociado a ON va.id_asociado = a.id_asociado
   JOIN Hospital h ON v.id_hospital = h.id_hospital
   JOIN Tratamiento t ON v.id_victima = t.id_victima
-  GROUP BY v.nombre_victima, v.apellido_victima, v.direccion_victima
-  HAVING COUNT(DISTINCT va.id_asociado) < 2 AND COUNT(DISTINCT t.id_tratamiento) = 2;`;
+GROUP BY 
+  v.nombre_victima, 
+  v.apellido_victima, 
+  v.direccion_victima
+HAVING 
+  COUNT(DISTINCT va.id_asociado) < 2 AND 
+  COUNT(DISTINCT t.id_tratamiento) = 2
+ORDER BY 
+  v.nombre_victima, 
+  v.apellido_victima;
+`;
   try {
     const result = await sequelize.query(consulta);
     console.log(result);
